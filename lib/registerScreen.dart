@@ -1,6 +1,7 @@
 import 'package:diabetesimageclassifier/db_model.dart';
-import 'package:diabetesimageclassifier/loginScreen.dart';
+import 'package:diabetesimageclassifier/login_screen.dart';
 import 'package:diabetesimageclassifier/main.dart';
+import 'package:diabetesimageclassifier/select_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _passwordController.text,
       );
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const SelectClassifier()),
       );
     }
   }

@@ -1,5 +1,5 @@
 import 'package:diabetesimageclassifier/drawer_content.dart';
-import 'package:diabetesimageclassifier/loginScreen.dart';
+import 'package:diabetesimageclassifier/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';

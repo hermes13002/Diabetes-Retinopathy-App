@@ -1,14 +1,12 @@
 import 'dart:io';
 import 'package:diabetesimageclassifier/classifier_model/classifier.dart';
-import 'package:diabetesimageclassifier/loginScreen.dart';
-import 'package:diabetesimageclassifier/mulitImagePage.dart';
-import 'package:diabetesimageclassifier/registerScreen.dart';
+import 'package:diabetesimageclassifier/multi_image_page.dart';
 import 'package:diabetesimageclassifier/splash_screen.dart';
 import 'package:diabetesimageclassifier/widget/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
+// import 'package:tflite/tflite.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() {
@@ -116,9 +114,9 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _image = File(pickedFile.path);
       });
-      List<Map<String, dynamic>> results = await _classifier.classifyImages([_image!]);
+      List<String> results = await _classifier.classifyImages([_image!]);
       setState(() {
-        _result = results as String;
+        _result = results.isNotEmpty ? results[0] : 'Unknown';
       });
     }
   }
@@ -161,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: _image == null
                       ? Center(child: Text('No image selected.', style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.black)))
-                      : Image.file(File(_image!.path)),
+                      : Image.file(_image!),
                     ),
                   ),
                 ),
@@ -199,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
             
-                const SizedBox(height: 10,),
+                // const SizedBox(height: 10,),
             
                 // InkWell(
                 //   onTap: () {
@@ -225,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                 //   )
                 // ),
             
-                const SizedBox(height: 50,),
+                const SizedBox(height: 20,),
             
                 Center(child: 
                   Container(
@@ -268,19 +266,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const MultipleImagesClassifierPage()),
-                    );
-                  },
-                  child: const Text('Multiple Images'),
-                )
             
               ],
             ),
-          ),
+          )
         ),
       )
     );

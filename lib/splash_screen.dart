@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'package:diabetesimageclassifier/loginScreen.dart';
 import 'package:diabetesimageclassifier/registerScreen.dart';
 import 'package:flutter/material.dart';
-// import 'package:diabetesimageclassifier/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Timer(const Duration(seconds: 6), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => RegisterScreen()),
       );
     });
   }

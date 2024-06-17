@@ -15,8 +15,8 @@ class Classifier {
     );
   }
 
-  Future<List<Map<String, dynamic>>> classifyImages(List<File> images) async {
-    List<Map<String, dynamic>> results = [];
+  Future<List<String>> classifyImages(List<File> images) async {
+    List<String> results = [];
     for (File image in images) {
       var output = await Tflite.runModelOnImage(
         path: image.path,
@@ -27,21 +27,15 @@ class Classifier {
         asynch: true,
       );
       if (output != null && output.isNotEmpty) {
-        results.add({
-          'label': output[0]['label'],
-          'confidence': output[0]['confidence'],
-        });
+        results.add(output[0]['label']);
       } else {
-        results.add({
-          'label': 'Unknown',
-          'confidence': 0.0,
-        });
+        results.add('Unknown');
       }
     }
     return results;
   }
 
-  Future<void> dispose() async {
-    await Tflite.close();
+  void dispose() {
+    Tflite.close(); 
   }
 }
