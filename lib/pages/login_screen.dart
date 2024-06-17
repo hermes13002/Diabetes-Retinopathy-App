@@ -1,7 +1,6 @@
 import 'package:diabetesimageclassifier/db_model.dart';
-import 'package:diabetesimageclassifier/main.dart';
-import 'package:diabetesimageclassifier/register_screen.dart';
-import 'package:diabetesimageclassifier/select_screen.dart';
+import 'package:diabetesimageclassifier/pages/register_screen.dart';
+import 'package:diabetesimageclassifier/pages/select_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,7 +8,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -20,8 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       var user = await DatabaseHelper().getUser(
-        _usernameController.text,
-        _passwordController.text,
+        _usernameController.text.trim(),
+        _passwordController.text.trim(),
       );
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -45,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text('Login', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.blue,),),
         backgroundColor: Colors.grey[200],
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[200],
       body: Padding(

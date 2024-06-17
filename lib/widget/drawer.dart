@@ -1,5 +1,5 @@
-import 'package:diabetesimageclassifier/drawer_content.dart';
-import 'package:diabetesimageclassifier/login_screen.dart';
+import 'package:diabetesimageclassifier/pages/drawer_content.dart';
+import 'package:diabetesimageclassifier/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -113,7 +113,7 @@ class DrawerWidget extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LoginScreen()
+                  builder: (context) => const LoginScreen()
                 )
               );
             },
@@ -146,6 +146,7 @@ class DrawerWidget extends StatelessWidget {
                 leading: const Icon(Icons.email),
                 title: const Text('Gmail'),
                 onTap: () async {
+                  // ignore: body_might_complete_normally_nullable
                   String? encodeQueryParameters(Map<String, String> params) {
                     params.entries
                         .map((MapEntry<String, String> e) =>

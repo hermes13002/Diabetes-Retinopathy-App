@@ -1,13 +1,14 @@
 import 'package:diabetesimageclassifier/db_model.dart';
-import 'package:diabetesimageclassifier/login_screen.dart';
-import 'package:diabetesimageclassifier/main.dart';
-import 'package:diabetesimageclassifier/select_screen.dart';
+import 'package:diabetesimageclassifier/pages/login_screen.dart';
+import 'package:diabetesimageclassifier/pages/select_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
@@ -18,8 +19,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       await DatabaseHelper().registerUser(
-        _usernameController.text,
-        _passwordController.text,
+        _usernameController.text.trim(),
+        _passwordController.text.trim(),
       );
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const SelectClassifier()),
@@ -33,6 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         title: Text('Register', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.blue,),),
         backgroundColor: Colors.grey[200],
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey[200],
       body: Padding(

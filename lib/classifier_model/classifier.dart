@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:tflite/tflite.dart';
 
 class Classifier {
@@ -8,11 +9,23 @@ class Classifier {
     loadModel();
   }
 
-  Future<void> loadModel() async {
-    await Tflite.loadModel(
-      model: 'assets/model/model.tflite',
+  // Future<void> loadModel() async {
+  //   await Tflite.loadModel(
+  //     model: 'assets/model/model.tflite',
+  //     labels: 'assets/model/labels.txt',
+  //   );
+  // }
+
+  Future loadModel() async {
+    Tflite.close();
+    try {
+      await Tflite.loadModel(
+        model: 'assets/model/model.tflite',
       labels: 'assets/model/labels.txt',
     );
+    } on PlatformException {
+      return 'Failed to load model.';
+    }
   }
 
   Future<List<String>> classifyImages(List<File> images) async {

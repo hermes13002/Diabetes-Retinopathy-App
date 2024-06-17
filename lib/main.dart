@@ -1,13 +1,21 @@
 import 'dart:io';
 import 'package:diabetesimageclassifier/classifier_model/classifier.dart';
-import 'package:diabetesimageclassifier/multi_image_page.dart';
-import 'package:diabetesimageclassifier/splash_screen.dart';
+import 'package:diabetesimageclassifier/db_model.dart';
+import 'package:diabetesimageclassifier/pages/multi_image_page.dart';
+import 'package:diabetesimageclassifier/pages/splash_screen.dart';
 import 'package:diabetesimageclassifier/widget/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:tflite/tflite.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart'; // For date and time formatting
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
+
+
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Diabetes Image Classifier',
+      title: 'Diabetes Retinopathy Image Classifier',
       debugShowCheckedModeBanner: false,
       builder: EasyLoading.init(),
       home: const SplashScreen(),
@@ -74,28 +82,6 @@ class _HomePageState extends State<HomePage> {
   //   });
   // }
 
-
-  // // For the multi images classification
-  // Future<List<String>> classifyImages(List<File> images) async {
-  //   List<String> results = [];
-  //   for (File image in images) {
-  //     var output = await Tflite.runModelOnImage(
-  //       path: image.path,
-  //       imageMean: 0.0,
-  //       imageStd: 255.0,
-  //       numResults: 2,
-  //       threshold: 0.2,
-  //       asynch: true,
-  //     );
-  //     if (output != null && output.isNotEmpty) {
-  //       results.add(output[0]['label']);
-  //     } else {
-  //       results.add('Unknown Image');
-  //     }
-  //   }
-  //   return results;
-  // }
-
   // @override
   // void dispose() {
   //   Tflite.close(); 
@@ -121,11 +107,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  @override
-  void dispose() {
-    _classifier.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _classifier.dispose();
+  //   super.dispose();
+  // }
 
 
   @override
@@ -144,7 +130,31 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 35,
+                  height: 25,
+                ),
+
+                Center(
+                  child: InkWell(
+                    onTap:() {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const MultipleImagesClassifierPage()),
+                      );
+                    },
+                    child: Container(
+                      width: 210,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        border: Border.all(width: 1, color: const Color.fromARGB(255, 197, 197, 197)),
+                        borderRadius: BorderRadius.circular(15)
+                      ),
+                      child: Center(child: Text('Multiple Image Classifier', style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.white))),
+                    )
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 25,
                 ),
             
                 Center(
@@ -179,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                     // },
                     onTap: _pickImage,
                     child: Container(
-                      width: 260,
+                      width: 200,
                       height: 70,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -190,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           const Icon(Icons.file_download, size: 23),
-                          Text('Choose Picture from Gallery', style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.black))
+                          Text('Pick Image', style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.black))
                         ],
                       ),
                     )
@@ -227,46 +237,63 @@ class _HomePageState extends State<HomePage> {
             
                 Center(child: 
                   Container(
-                    width: 300,
-                    height: 120,
+                    width: 350,
+                    height: 250,
+                    padding: const EdgeInsetsDirectional.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(width: 1, color: const Color.fromARGB(255, 197, 197, 197)),
                       borderRadius: BorderRadius.circular(15)
                     ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('Result', style: GoogleFonts.poppins(fontWeight: FontWeight.w800, fontSize: 16, color: Colors.blue)),
-            
+                        const SizedBox(height: 10,),
                         Text(
                           _result == null 
                           ? 'Result is shown here'
                           : 'Result: $_result',
                           style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.black)
                         ),
-                        Text(
-                          _result == null
-                          ? 'Confidence Level is shown here'
-                          : 'Confidence Level: $_result%',
-                          style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.black)),
+                        // Text(
+                        //   _result == null
+                        //   ? 'Confidence Level is shown here'
+                        //   : 'Confidence Level: $_result%',
+                        //   style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.black)),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              textResult(),
+                              style: GoogleFonts.poppins(fontWeight: FontWeight.w800, fontSize: 16, color: Colors.blue)
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 18),
+
+                        Center(
+                          child: InkWell(
+                            onTap:_generatePdf,
+                            child: Container(
+                              width: 210,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                border: Border.all(width: 1, color: const Color.fromARGB(255, 197, 197, 197)),
+                                borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: Center(child: Text('Download Result', style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.white))),
+                            )
+                          ),
+                        ),
+
                       ],
                     )
                   )
                 ),
 
-                const SizedBox(height: 10,),
-            
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      textResult(),
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.w800, fontSize: 16, color: Colors.blue)
-                    ),
-                  ],
-                ),
-            
+                const SizedBox(height: 10,)
               ],
             ),
           )
@@ -278,15 +305,64 @@ class _HomePageState extends State<HomePage> {
 
   textResult(){
     if(_result != null && _result == 'DR'){
-      return 'The result shows that this patient has \nDiabetes Retinopathy.';
+      return 'The result shows that this \npatient has Diabetes Retinopathy.';
     } 
     else if (_result != null && _result == 'No_DR') {
-      return 'The result does not indicate that this\npatient has Diabetes Retinopathy.';
+      return 'The result does not indicate that \nthis patient has \nDiabetes Retinopathy.';
     }
     else {
       return '';
     }
   }
+
+
+
+  Future<void> _generatePdf() async {
+  final pdf = pw.Document();
+  final dateTime = DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now());
+
+  pdf.addPage(
+    pw.Page(
+      build: (pw.Context context) {
+        return pw.Column(
+          children: [
+            pw.Text('Classification Results', style: const pw.TextStyle(fontSize: 24)),
+            pw.Text('Date and Time: $dateTime', style: const pw.TextStyle(fontSize: 16)),
+            pw.SizedBox(height: 16),
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                
+                pw.Image(
+                  pw.MemoryImage(_image!.readAsBytesSync()),
+                  height: 100,
+                  width: 100,
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text(
+                  _result.isNotEmpty ? 'Label: $_result' : 'Label: Unknown',
+                  style: const pw.TextStyle(fontSize: 18),
+                ),
+                pw.SizedBox(height: 16),
+              ],
+            ),
+            pw.Text(
+              textResult(),
+              style: const pw.TextStyle(fontSize: 18),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+
+  final output = await getTemporaryDirectory();
+  final file = File("${output.path}/classification_results.pdf");
+  await file.writeAsBytes(await pdf.save());
+
+  await Printing.sharePdf(bytes: await pdf.save(), filename: 'classification_results.pdf');
+}
+
 }
 
 
