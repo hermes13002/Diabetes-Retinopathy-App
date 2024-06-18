@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:diabetesimageclassifier/classifier_model/classifier.dart';
+import 'package:diabetesimageclassifier/main.dart';
 import 'package:diabetesimageclassifier/pages/select_screen.dart';
 import 'package:diabetesimageclassifier/widget/drawer.dart';
 import 'package:flutter/material.dart';
@@ -47,12 +48,7 @@ class _MultipleImagesClassifierPageState extends State<MultipleImagesClassifierP
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Automated Detection of \nDiabetic Retinopathy', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.blue,),),
-          leading: IconButton(onPressed: (){
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const SelectClassifier()),
-            );
-          }, icon: const Icon(Icons.arrow_back_ios_rounded)),
+          title: Text('Automated Detection of Diabetic Retinopathy', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 20, color: Colors.blue,),),
           backgroundColor: Colors.grey[200],
         ),
         drawer: const DrawerWidget(),
@@ -62,10 +58,59 @@ class _MultipleImagesClassifierPageState extends State<MultipleImagesClassifierP
           child: Center(
             child: Column(
               children: <Widget>[
+                Center(child: 
+                  Container(
+                    width: 350,
+                    height: 70,
+                    padding: const EdgeInsets.only(top:12, bottom:12, right: 8, left:8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(width: 1, color: const Color.fromARGB(255, 197, 197, 197)),
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Navigate to:',
+                          style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.black)
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        InkWell(
+                          onTap:() {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => const HomePage()),
+                            );
+                          },
+                          child: Container(
+                            width: 210,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              border: Border.all(width: 1, color: const Color.fromARGB(255, 197, 197, 197)),
+                              borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Center(child: Text('Single Image Classifier', style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.white))),
+                          )
+                        ),
+
+                      ],
+                    )
+                  )
+                ),
+
+                const SizedBox(height: 18),
+
                 _images.isEmpty
                 ? const Text('No images selected.')
                 : Expanded(
-                    child: ListView.builder(
+                    child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Adjust columns as needed
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 30.0,
+                    ),
                       itemCount: _images.length,
                       itemBuilder: (context, index) {
                         return Column(
@@ -73,7 +118,7 @@ class _MultipleImagesClassifierPageState extends State<MultipleImagesClassifierP
                             ClipRRect(
                               borderRadius: BorderRadius.circular(25),
                               child: Container(
-                                width: 200,
+                                width: 130,
                                 // height: _images[index] == null ? 200 : null,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -190,6 +235,14 @@ class _MultipleImagesClassifierPageState extends State<MultipleImagesClassifierP
     await file.writeAsBytes(await pdf.save());
 
     await Printing.sharePdf(bytes: await pdf.save(), filename: 'classification_results.pdf');
+
+  //   final directory = await getExternalStorageDirectory();
+  // final file = File("${directory?.path}/classification_results.pdf");
+
+  // final pdfBytes = await pdf.save();
+  // await file.writeAsBytes(pdfBytes.toList());
+
+  // DocumentFileSavePlus.saveFile(pdfBytes, "classification_results.pdf", "classification_results/pdf");
   }
 
 }

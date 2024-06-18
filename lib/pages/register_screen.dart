@@ -22,6 +22,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _usernameController.text.trim(),
         _passwordController.text.trim(),
       );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Registration successful!'),
+        ));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const SelectClassifier()),
       );

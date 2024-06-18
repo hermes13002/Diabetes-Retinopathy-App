@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Automated Detection of Diabetic Retinopathy', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.blue,),),
+        title: Text('Automated Detection of Diabetic Retinopathy', style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 20, color: Colors.blue,),),
         backgroundColor: Colors.grey[200],
       ),
       drawer: const DrawerWidget(),
@@ -130,27 +130,49 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 25,
+                  height: 10,
                 ),
 
-                Center(
-                  child: InkWell(
-                    onTap:() {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const MultipleImagesClassifierPage()),
-                      );
-                    },
-                    child: Container(
-                      width: 210,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        border: Border.all(width: 1, color: const Color.fromARGB(255, 197, 197, 197)),
-                        borderRadius: BorderRadius.circular(15)
-                      ),
-                      child: Center(child: Text('Multiple Image Classifier', style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.white))),
+                Center(child: 
+                  Container(
+                    width: 350,
+                    height: 70,
+                    padding: const EdgeInsets.only(top:12, bottom:12, right: 8, left:8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(width: 1, color: const Color.fromARGB(255, 197, 197, 197)),
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Navigate to:',
+                          style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.black)
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        InkWell(
+                          onTap:() {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => const MultipleImagesClassifierPage()),
+                            );
+                          },
+                          child: Container(
+                            width: 210,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              border: Border.all(width: 1, color: const Color.fromARGB(255, 197, 197, 197)),
+                              borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Center(child: Text('Multiple Image Classifier', style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.white))),
+                          )
+                        ),
+
+                      ],
                     )
-                  ),
+                  )
                 ),
 
                 const SizedBox(
