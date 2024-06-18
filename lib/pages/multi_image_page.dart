@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:diabetesimageclassifier/classifier_model/classifier.dart';
 import 'package:diabetesimageclassifier/main.dart';
-import 'package:diabetesimageclassifier/pages/select_screen.dart';
 import 'package:diabetesimageclassifier/widget/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
