@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:diabetesimageclassifier/classifier_model/classifier.dart';
-import 'package:diabetesimageclassifier/db_model.dart';
 import 'package:diabetesimageclassifier/pages/multi_image_page.dart';
 import 'package:diabetesimageclassifier/pages/splash_screen.dart';
 import 'package:diabetesimageclassifier/widget/drawer.dart';
